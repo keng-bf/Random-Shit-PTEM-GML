@@ -1,0 +1,4 @@
+gml 
+var objectlist = 0
+while(object_exists(objectlist)){objectlist++};
+objectlist = irandom_range(0,objectlist);instance_create(obj_player.x + 50,obj_player.y,objectlist);instance_destroy(obj_transfotip);with instance_create(0, 0, obj_transfotip){text = "Create " + string_upper(object_get_name(objectlist));}
