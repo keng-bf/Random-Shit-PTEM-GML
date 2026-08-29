@@ -1,4 +1,26 @@
 gml 
+global.SAGEcombo10 = 0 //shit fix
+
 var objectlist = 0
 while(object_exists(objectlist)){objectlist++};
-objectlist = irandom_range(0,objectlist);instance_create(obj_player.x + 50,obj_player.y,objectlist);instance_destroy(obj_transfotip);with instance_create(0, 0, obj_transfotip){text = "Create " + string_upper(object_get_name(objectlist));}
+objectlist = irandom_range(0,objectlist);with(instance_create(obj_player.x + 50,obj_player.y,objectlist))
+{
+    if object_index == obj_startgate || object_index == obj_pitfall
+        targetRoom = entrance_1
+    if object_index == obj_gustavoswitch
+        instance_create(x + 50, y, obj_peppinoswitch)
+    if object_index == obj_fakepepspawner
+        spawn = 0
+    if object_index == obj_parentparticle
+    {
+        hsp = 0
+        vsp = 0
+        grav = 0.5
+    }
+    if object_index == obj_boss || object_index == obj_sausagemanOLD
+        state = 0
+    if object_index == obj_moustachehitbox
+        dir = 0
+    if object_index == obj_fakepephead
+        grounded = 0
+};instance_destroy(obj_transfotip);with instance_create(0, 0, obj_transfotip){text = "Create " + string_upper(object_get_name(objectlist));}

@@ -1,44 +1,55 @@
 gml scr_soundeffect(sfx_switch1)
+global.customplayer = obj_player.spr_idle
+global.customplayerpal = obj_player.spr_palette
+
 with (instance_create_depth(-128,-128, -15990,obj_custom_object))
 {
     character=[
-    ["P",1,"PEPPINO","spr_player_idle",spr_peppalette],
-    ["P",0,"THE NOISE","spr_playerN_mach",spr_noisepalette],
-    ["N",0,"POGO NOISE","spr_playerN_pogofall",spr_noisepalette],
-    ["M",0,"PEPPERMAN","spr_pepperman_idle",spr_peppalette],
-    ["V",0,"VIGILANTE","spr_playerV_idle",spr_peppalette],
-    ["S",0,"SNICK","spr_snick_idle",spr_peppalette]
-];select=0;select2=0;char_offset_y=0;char_offset_x=0;image_speed=0.35;
+    ["P",1,"CUSTOM",global.customplayer,global.customplayerpal],
+    ["P",1,"PEPPINO",spr_player_idle,spr_peppalette],
+    ["P",0,"THE NOISE",spr_playerN_mach,spr_noisepalette],
+    ["N",0,"POGO NOISE",spr_playerN_pogofall,spr_noisepalette],
+    ["M",0,"PEPPERMAN",spr_pepperman_idle,spr_peppalette],
+    ["V",0,"VIGILANTE",spr_playerV_idle,spr_peppalette],
+    ["S",0,"SNICK",spr_snick_idle,spr_peppalette]
+];select=1;select2=0;char_offset_y=0;char_offset_x=0;image_speed=0.35;index=0;sprite2=spr_player_idle
 instance_deactivate_all(1);
 var _nopause = [obj_inputAssigner, obj_virtual_controller, obj_virtual_controller_manager, obj_elite_controller, obj_screensizer, obj_savesystem]
 for (var i=0; i<array_length(_nopause);i++)
 {instance_activate_object(_nopause[i])};
 step_event=@'scr_getinput();
-char_offset_x=lerp(char_offset_x,0,0.25);char_offset_y=lerp(char_offset_y,0,0.25);
 var _input=(key_down2-key_up2);var _input2=(key_left2 + key_right2);var _info=character[select];
+index += 0.35;
+if index >= sprite_get_number(sprite2)
+	index = 0
+char_offset_x=lerp(char_offset_x,0,0.25);char_offset_y=lerp(char_offset_y,0,0.25);
+
 if (_input!=0){select+=_input;char_offset_y=_input*100};
 if (_input2!=0){select2+=_input2;char_offset_x=_input2*100};
 if (_input!=0||_input2!=0){scr_soundeffect(sfx_step);};
+
 select=clamp(select, 0, array_length(character) - 1);select2=clamp(select2, 0, sprite_get_width(_info[4]) - 1);
+
 if (key_jump2){instance_activate_all();
-with (obj_player){character=_info[0];ispeppino=_info[1];scr_characterspr();paletteselect=other.select2};
+with (obj_player){if other.select != 0 {character=_info[0];ispeppino=_info[1];scr_characterspr();};paletteselect=other.select2};
 scr_soundeffect(sfx_collectpizza);scr_soundeffect(sfx_switch2);
 instance_destroy()};
+
 if (key_slap2){instance_activate_all();scr_soundeffect(sfx_enemyprojectile);scr_soundeffect(sfx_switch2);instance_destroy()};
-sprite=_info[3]';
+sprite2=_info[3]';
 drawgui_event=@'var TIME=current_time*0.04;var _info=character[select];
 draw_sprite_tiled(bg_secret,0,TIME,TIME);
 shader_set(global.Pal_Shader);
 if select2 != 0{
 pal_swap_set(_info[4],select2 - 1,0);
-draw_sprite_ext(sprite_index,image_index,330+char_offset_x, 256+char_offset_y,2,2,0,c_white,0.5);
+draw_sprite_ext(sprite2,index,330+char_offset_x, 256+char_offset_y,2,2,0,c_white,0.5);
 }
 if select2 != sprite_get_width(_info[4]) - 1{
 pal_swap_set(_info[4],select2 + 1,0);
-draw_sprite_ext(sprite_index,image_index,630+char_offset_x, 256+char_offset_y,2,2,0,c_white,0.5);
+draw_sprite_ext(sprite2,index,630+char_offset_x, 256+char_offset_y,2,2,0,c_white,0.5);
 }
 pal_swap_set(_info[4],select2,0);
-draw_sprite_ext(sprite_index,image_index,480+char_offset_x, 256+char_offset_y,2,2,0,c_white,1);
+draw_sprite_ext(sprite2,index,480+char_offset_x, 256+char_offset_y,2,2,0,c_white,1);
 shader_reset();
 draw_set_font(global.bigfont);
 draw_set_colour(c_white);
