@@ -1,0 +1,60 @@
+gml 
+function ea(_spr,_f=1,_x=50,_y=50,_spd=1)
+{
+    if file_exists("sprites/spr_"+_spr+".png")
+        {var s=sprite_add("sprites/spr_"+_spr+".png",_f,0,0,_x,_y);sprite_set_speed(s,_spd,1);return s}
+    else
+        {show_message_async("spr_"+_spr+".png Missing!");exit}
+};
+room_instance_add(rm_custom,96,384,obj_doorA);
+with (instance_create(608,234,obj_custom_object))
+{
+    blocktree = ea("blocktree_parts", 4, 0, 0, 0)
+    blocktree_block = ea("blocktree_block", 1, 0, 0, 0)
+    persistent=1;siner = 0;image_xscale = 2;image_yscale = 2;siner = random(600);blocktimer = 0;image_speed = 0;spec = 0;remdepth = depth;leaf_dir = 0;
+    step_event=@'if room != rm_custom exit;
+oo = 0;
+if (spec < 2) blocktimer += 0.5;
+if (blocktimer == 20)
+{xv = x + (sprite_width / 4) + random(sprite_width / 2);yv = y + (sprite_height / 4) + random(sprite_height / 4);
+block = instance_create(xv, yv, epicboogaloo);
+with (block)
+{
+    sprite_index = other.blocktree_block
+    hspeed = (0.2 + random(1)) * (other.leaf_dir * -1);vspeed = 0.35 + random(1.5);gravity_direction = other.leaf_dir ? 180 : 0;gravity = 0.1;image_alpha = 0;friction = -0.1;}
+    block.depth = depth - 1;block.image_blend = merge_color(c_white, c_black, oo);
+    
+    if (oo >= 0.8){with (block) instance_destroy();}
+}
+
+if (blocktimer >= 20 && blocktimer <= 30) {with (block) {if (image_alpha < 1) image_alpha += 0.1;} }
+if (blocktimer >= 38) {with (block) image_alpha -= 0.05;}
+if (blocktimer >= 48) {blocktimer = 0;with (block) instance_destroy();}
+'
+    roomstart_event=@'
+var eggroom = irandom_range(0, 10);
+if eggroom == 6 {
+with obj_player{if cutscene == 0
+{
+targetRoom = rm_custom;
+targetDoor = "A";
+xscale = 1
+room_goto(rm_custom)
+}}}
+if room != rm_custom exit;
+with (instance_create(0,416,obj_solid)){image_xscale = 30;image_yscale = 4};
+with (instance_create(0,-128,obj_solid)){image_xscale = 30;image_yscale = 4};
+with (instance_create(-96,0,obj_solid)){image_xscale = 3;image_yscale = 17};
+with (instance_create(960,0,obj_solid)){image_xscale = 3;image_yscale = 17}
+bg=layer_background_create(layer_create(100,"Backgrounds3"),sprite1122);layer_background_htiled(bg,1);layer_background_vtiled(bg,1);
+instance_destroy(obj_pause);instance_destroy(obj_fadeout)
+audio_stop_sound(obj_music.musicID);obj_music.musicID=scr_music(audio_create_stream("music/deltarune_piano_collections_by_trevor_alan_gomes.ogg"))
+';
+    draw_event=@'if room != rm_custom exit;
+    siner += 0.5;
+    draw_sprite_ext(blocktree, 1, x, y, 2, 2, 0, image_blend, 1);
+    draw_sprite_ext(blocktree, 2, x + (sin(siner / 12) * 2), y + (cos(siner / 20) * 2), 2, 2, 0, image_blend, 1);
+    draw_sprite_ext(blocktree, 3, x + (sin(siner / 14) * 1), y + (cos(siner / 24) * 1), 2, 2, 0, image_blend, 1);
+';
+    docommand("reload_gml")
+}

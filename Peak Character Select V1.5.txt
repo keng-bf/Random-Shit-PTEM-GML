@@ -1,9 +1,9 @@
 gml scr_soundeffect(sfx_switch1)
 if !variable_global_exists("pcs_charactertext") global.pcs_charactertext = "CUSTOM"
 with (instance_create_depth(-128,-128, -15990,obj_custom_object))
-{customplayer = obj_player.spr_idle;customplayerpal = obj_player.spr_palette
+{
     character=[
-    ["",0,global.pcs_charactertext,customplayer,customplayerpal],
+    ["",0,global.pcs_charactertext,obj_player.spr_idle,obj_player.spr_palette],
     ["P",1,"PEPPINO",spr_player_idle,spr_peppalette],
     ["P",0,"THE NOISE",spr_playerN_mach,spr_noisepalette],
     ["N",0,"POGO NOISE",spr_playerN_pogofall,spr_noisepalette],

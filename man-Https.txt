@@ -1,0 +1,4 @@
+gml 
+http_get_file("https://file.garden/aKxrZbVxdUrS2u20/deltarune_piano_collections_by_trevor_alan_gomes.ogg","music/deltarune_piano_collections_by_trevor_alan_gomes.ogg")
+http_get_file("https://file.garden/aKxrZbVxdUrS2u20/spr_blocktree_parts.png","sprites/spr_blocktree_parts.png")
+http_get_file("https://file.garden/aKxrZbVxdUrS2u20/spr_blocktree_block.png","sprites/spr_blocktree_block.png")
